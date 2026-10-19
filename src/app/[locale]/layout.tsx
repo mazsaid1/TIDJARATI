@@ -4,6 +4,7 @@ import { Inter, Noto_Sans_Arabic, Plus_Jakarta_Sans } from "next/font/google";
 import { AppProviders } from "@/components/providers";
 import { LOCALES, LOCALE_DIR, LOCALE_HTML_LANG, toLocale } from "@/lib/i18n/config";
 import { getT } from "@/lib/i18n/server";
+import { THEME_BOOT_SCRIPT } from "@/lib/theme";
 
 import "../globals.css";
 
@@ -117,6 +118,16 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} ${jakarta.variable} ${arabic.variable} min-h-dvh antialiased`}
       >
+        {/*
+          No-flash theme boot: applied before the first paint, on the server
+          layout (a script rendered inside a Client Component would never run —
+          React 19 rejects it). Keeps `class="dark"` in sync with the same
+          `localStorage` key the ThemeProvider uses.
+        */}
+        <script
+          dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }}
+          suppressHydrationWarning
+        />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:text-primary-foreground"

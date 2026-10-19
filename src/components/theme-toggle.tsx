@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/theme-provider";
 import { Sun, Moon, Monitor } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -12,7 +12,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   const { t } = useI18n();
   const mounted = useIsMounted();
 
-  if (!mounted) {
+  if (!mounted || !theme) {
     return <div className={cn("h-9 w-9 rounded-xl border border-border", className)} aria-hidden />;
   }
 

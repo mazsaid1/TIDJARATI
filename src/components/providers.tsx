@@ -1,7 +1,6 @@
 "use client";
 
 import { type ReactNode, useMemo } from "react";
-import { ThemeProvider } from "next-themes";
 import { ClerkProvider, useAuth } from "@clerk/nextjs";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
@@ -9,16 +8,11 @@ import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { env } from "@/lib/env";
 import type { Locale } from "@/lib/i18n/config";
 import { I18nProvider } from "@/components/i18n/i18n-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 function Shell({ locale, children }: { locale: Locale; children: ReactNode }) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      enableSystem
-      disableTransitionOnChange={false}
-      storageKey="tidjarati-theme"
-    >
+    <ThemeProvider>
       <I18nProvider locale={locale}>{children}</I18nProvider>
     </ThemeProvider>
   );

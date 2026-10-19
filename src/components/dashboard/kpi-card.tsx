@@ -9,6 +9,7 @@ export function KpiCard({
   label,
   value,
   delta,
+  deltaLabel,
   hint,
   className,
 }: {
@@ -16,6 +17,7 @@ export function KpiCard({
   label: string;
   value: string;
   delta: number;
+  deltaLabel?: string;
   hint?: string;
   className?: string;
 }) {
@@ -24,7 +26,7 @@ export function KpiCard({
     <Card className={cn("group relative overflow-hidden p-5", className)}>
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-16 -right-16 h-36 w-36 rounded-full bg-primary/10 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+        className="pointer-events-none absolute -top-16 -end-16 h-36 w-36 rounded-full bg-primary/10 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
       />
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2.5">
@@ -40,7 +42,7 @@ export function KpiCard({
           )}
         >
           {up ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-          {formatPercent(Math.abs(delta) * (up ? 1 : -1)).replace("+", up ? "+" : "")}
+          {deltaLabel ?? formatPercent(Math.abs(delta) * (up ? 1 : -1)).replace("+", up ? "+" : "")}
         </span>
       </div>
       <p className="mt-4 font-display text-[26px] leading-none font-semibold tracking-tight tabular-nums">

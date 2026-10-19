@@ -211,8 +211,8 @@ export function Dropdown({
         role="menu"
         hidden={!open}
         className={cn(
-          "absolute z-50 mt-2 min-w-52 origin-top-right animate-fade-up rounded-xl border border-border bg-background-elevated p-1.5 shadow-[var(--shadow-lg)]",
-          align === "end" ? "right-0" : "left-0",
+          "absolute z-50 mt-2 min-w-52 origin-top animate-fade-up rounded-xl border border-border bg-background-elevated p-1.5 shadow-[var(--shadow-lg)]",
+          align === "end" ? "end-0" : "start-0",
           className,
         )}
       >
@@ -239,7 +239,7 @@ export function DropdownItem({
       role="menuitem"
       onClick={onClick}
       className={cn(
-        "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] transition-colors",
+        "flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-start text-[13px] transition-colors",
         danger
           ? "text-danger hover:bg-danger/10"
           : "text-foreground hover:bg-sidebar-hover",
@@ -285,8 +285,8 @@ export function Switch({
       >
         <span
           className={cn(
-            "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200",
-            checked && "translate-x-5",
+            "absolute top-0.5 start-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200",
+            checked && "translate-x-5 rtl:-translate-x-5",
           )}
         >
           {checked && <Check className="absolute inset-0 m-auto h-3 w-3 text-primary" />}

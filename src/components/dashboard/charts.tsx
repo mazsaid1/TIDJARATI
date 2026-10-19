@@ -16,7 +16,8 @@ import {
   YAxis,
 } from "recharts";
 
-import { cn, formatCurrency, formatNumber } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/i18n-provider";
 
 /* --------------------------------- Tooltip -------------------------------- */
 
@@ -31,9 +32,10 @@ function ChartTooltip({
   label?: string;
   format?: "currency" | "number" | "plain";
 }) {
+  const { t, format: fmt } = useI18n();
   if (!active || !payload?.length) return null;
-  const fmt = (v: number) =>
-    format === "currency" ? formatCurrency(v) : format === "number" ? formatNumber(v) : String(v);
+  const render = (v: number) =>
+    format === "currency" ? fmt.currency(v) : format === "number" ? fmt.number(v) : String(v);
 
   return (
     <div className="glass rounded-xl px-3.5 py-2.5 text-[12.5px] shadow-[var(--shadow-lg)]">
@@ -42,9 +44,9 @@ function ChartTooltip({
         {payload.map((entry, i) => (
           <div key={i} className="flex items-center gap-2 tabular-nums">
             <span className="h-2 w-2 rounded-full" style={{ background: entry.color }} />
-            <span className="text-muted-foreground">{entry.name}</span>
-            <span className="ml-auto pl-3 font-semibold text-foreground">
-              {fmt(Number(entry.value))}
+            <span className="text-muted-foreground">{entry.name && t(entry.name)}</span>
+            <span className="ms-auto ps-3 font-semibold text-foreground">
+              {render(Number(entry.value))}
             </span>
           </div>
         ))}
@@ -119,6 +121,7 @@ export function DonutChart({
   data: Array<{ name: string; value: number; color: string }>;
   className?: string;
 }) {
+  const { t, format } = useI18n();
   const total = data.reduce((s, d) => s + d.value, 0);
   return (
     <div className={cn("relative h-56 w-full", className)}>
@@ -142,8 +145,10 @@ export function DonutChart({
         </PieChart>
       </ResponsiveContainer>
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-display text-2xl font-semibold tabular-nums">{total}%</span>
-        <span className="text-[11.5px] text-faint">des commandes</span>
+        <span className="font-display text-2xl font-semibold tabular-nums">
+          {format.number(total)}%
+        </span>
+        <span className="text-[11.5px] text-faint">{t("des commandes")}</span>
       </div>
     </div>
   );

@@ -145,6 +145,18 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Arabic typography — Inter / Plus Jakarta carry no Arabic glyphs. */
+html[data-locale="ar"] body,
+html[data-locale="ar"] .font-display {
+  font-family: var(--font-arabic), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: normal;
+}
+
+/* Directional icons (arrows, chevrons) follow the reading direction. */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
 ::selection {
   background: rgba(124, 58, 237, 0.28);
 }

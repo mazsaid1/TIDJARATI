@@ -6,7 +6,10 @@ import { Menu, X, ArrowRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LocaleSwitcher } from "@/components/i18n/locale-switcher";
+import { useI18n } from "@/components/i18n/i18n-provider";
 
+/** Section anchors stay in French: they are the source keys for translation. */
 const LINKS = [
   { href: "/#features", label: "Fonctionnalités" },
   { href: "/#integrations", label: "Intégrations" },
@@ -16,6 +19,7 @@ const LINKS = [
 ];
 
 export function MarketingNav() {
+  const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -34,51 +38,52 @@ export function MarketingNav() {
       )}
     >
       <nav
-        aria-label="Navigation principale"
+        aria-label={t("Navigation principale")}
         className={cn(
           "mx-auto flex h-14 max-w-6xl items-center gap-3 rounded-2xl px-4 transition-all duration-300 sm:px-5",
           scrolled ? "glass shadow-[var(--shadow-md)]" : "border border-transparent",
         )}
       >
-        <Link href="/" className="flex items-center gap-2.5" aria-label="TIDJARATI — accueil">
+        <Link href="/" className="flex items-center gap-2.5" aria-label={t("TIDJARATI — accueil")}>
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[image:var(--gradient-brand)] font-display text-sm font-bold text-white shadow-[0_6px_20px_-8px_rgba(124,58,237,0.9)]">
-            H
+            T
           </span>
           <span className="font-display text-[15.5px] font-semibold tracking-tight">TIDJARATI</span>
         </Link>
 
-        <ul className="ml-6 hidden items-center gap-1 lg:flex">
+        <ul className="ms-6 hidden items-center gap-1 lg:flex">
           {LINKS.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
                 className="rounded-lg px-3 py-2 text-[13.5px] font-medium text-muted-foreground transition-colors hover:bg-sidebar-hover hover:text-foreground"
               >
-                {l.label}
+                {t(l.label)}
               </a>
             </li>
           ))}
         </ul>
 
-        <div className="ml-auto flex items-center gap-2.5">
+        <div className="ms-auto flex items-center gap-2.5">
+          <LocaleSwitcher />
           <ThemeToggle />
           <Link
             href="/sign-in"
             className="hidden h-9 items-center rounded-xl px-3.5 text-[13.5px] font-medium text-muted-foreground transition-colors hover:bg-sidebar-hover hover:text-foreground sm:inline-flex"
           >
-            Connexion
+            {t("Connexion")}
           </Link>
           <Link
             href="/sign-up"
             className="group hidden h-9 items-center gap-1.5 rounded-xl bg-[image:var(--gradient-brand)] px-4 text-[13.5px] font-medium text-white shadow-[0_8px_26px_-10px_rgba(124,58,237,0.9)] transition-all hover:-translate-y-0.5 sm:inline-flex"
           >
-            Commencer
-            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            {t("Commencer")}
+            <ArrowRight className="rtl-flip h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-label={open ? t("Fermer le menu") : t("Ouvrir le menu")}
             aria-expanded={open}
             className="flex h-9 w-9 items-center justify-center rounded-xl border border-border text-foreground lg:hidden"
           >
@@ -102,7 +107,7 @@ export function MarketingNav() {
                 onClick={() => setOpen(false)}
                 className="block rounded-xl px-4 py-3 text-[14.5px] font-medium text-muted-foreground transition-colors hover:bg-sidebar-hover hover:text-foreground"
               >
-                {l.label}
+                {t(l.label)}
               </a>
             </li>
           ))}
@@ -111,13 +116,13 @@ export function MarketingNav() {
               href="/sign-in"
               className="flex h-10 flex-1 items-center justify-center rounded-xl border border-border text-[14px] font-medium"
             >
-              Connexion
+              {t("Connexion")}
             </Link>
             <Link
               href="/sign-up"
               className="flex h-10 flex-1 items-center justify-center rounded-xl bg-[image:var(--gradient-brand)] text-[14px] font-medium text-white"
             >
-              Commencer
+              {t("Commencer")}
             </Link>
           </li>
         </ul>

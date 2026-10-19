@@ -4,10 +4,12 @@ import { useTheme } from "next-themes";
 import { Sun, Moon, Monitor } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/i18n-provider";
 import { useIsMounted } from "@/lib/use-mounted";
 
 export function ThemeToggle({ className }: { className?: string }) {
   const { resolvedTheme, setTheme, theme } = useTheme();
+  const { t } = useI18n();
   const mounted = useIsMounted();
 
   if (!mounted) {
@@ -21,14 +23,18 @@ export function ThemeToggle({ className }: { className?: string }) {
   };
 
   const label =
-    theme === "light" ? "Thème clair" : theme === "dark" ? "Thème sombre" : "Thème système";
+    theme === "light"
+      ? t("Thème clair")
+      : theme === "dark"
+        ? t("Thème sombre")
+        : t("Thème système");
 
   return (
     <button
       type="button"
       onClick={cycle}
       aria-label={label}
-      title={`${label} — cliquer pour basculer`}
+      title={t("{label} — cliquer pour basculer", { label })}
       className={cn(
         "relative inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-card text-muted-foreground transition-all duration-200 hover:border-primary/40 hover:text-primary focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none",
         className,

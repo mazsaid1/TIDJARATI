@@ -13,13 +13,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, icon, ...props }, ref) => (
     <div className="relative flex items-center">
       {icon && (
-        <span className="pointer-events-none absolute left-3.5 flex text-faint" aria-hidden>
+        <span className="pointer-events-none absolute start-3.5 flex text-faint" aria-hidden>
           {icon}
         </span>
       )}
       <input
         ref={ref}
-        className={cn(base, icon && "pl-10", className)}
+        className={cn(base, icon && "ps-10", className)}
         {...props}
       />
     </div>
@@ -36,7 +36,7 @@ Textarea.displayName = "Textarea";
 
 export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSelectElement>>(
   ({ className, children, ...props }, ref) => (
-    <select ref={ref} className={cn(base, "cursor-pointer appearance-none pr-9", className)} {...props}>
+    <select ref={ref} className={cn(base, "cursor-pointer appearance-none pe-9", className)} {...props}>
       {children}
     </select>
   ),

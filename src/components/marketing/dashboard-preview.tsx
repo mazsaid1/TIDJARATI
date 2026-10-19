@@ -1,8 +1,10 @@
+"use client";
+
 import { Banknote, ShoppingCart, Target, TrendingUp, Sparkles, ArrowUpRight } from "lucide-react";
 
 import { REVENUE_SERIES, ORDERS } from "@/lib/mock/data";
 import { OrderStatusBadge } from "@/components/dashboard/status-badge";
-import { formatCurrency, relativeTime } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/i18n-provider";
 
 const KPI = [
   { icon: Banknote, label: "CA 30 j", value: "4,82 M", delta: "+18,4 %" },
@@ -12,6 +14,7 @@ const KPI = [
 
 /** Stylised dashboard preview — hero visual, decorative (aria-hidden). */
 export function DashboardPreview() {
+  const { t, format } = useI18n();
   const max = Math.max(...REVENUE_SERIES.map((d) => d.revenue));
   const points = REVENUE_SERIES.map((d, i) => {
     const x = (i / (REVENUE_SERIES.length - 1)) * 100;
@@ -42,7 +45,7 @@ export function DashboardPreview() {
               <div key={k.label} className="rounded-xl border border-border bg-card p-3">
                 <div className="flex items-center gap-1.5">
                   <k.icon className="h-3.5 w-3.5 text-primary" />
-                  <span className="truncate text-[11px] text-muted-foreground">{k.label}</span>
+                  <span className="truncate text-[11px] text-muted-foreground">{t(k.label)}</span>
                 </div>
                 <div className="mt-1.5 flex items-baseline gap-1.5">
                   <span className="font-display text-lg font-semibold tracking-tight tabular-nums sm:text-xl">
@@ -58,9 +61,9 @@ export function DashboardPreview() {
           <div className="relative overflow-hidden rounded-xl border border-border bg-card p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[12px] font-medium text-muted-foreground">Chiffre d’affaires</p>
+                <p className="text-[12px] font-medium text-muted-foreground">{t("Chiffre d’affaires")}</p>
                 <p className="font-display text-base font-semibold tabular-nums sm:text-lg">
-                  {formatCurrency(249000)}
+                  {format.currency(249000)}
                 </p>
               </div>
               <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-1 text-[10.5px] font-semibold text-success tabular-nums">
@@ -96,10 +99,10 @@ export function DashboardPreview() {
               >
                 <span className="font-mono text-[11px] text-faint">{o.reference}</span>
                 <span className="hidden truncate text-[12px] font-medium sm:inline">{o.customer}</span>
-                <span className="ml-auto flex items-center gap-2">
+                <span className="ms-auto flex items-center gap-2">
                   <OrderStatusBadge status={o.status} />
                   <span className="text-[11.5px] font-semibold tabular-nums">
-                    {formatCurrency(o.total)}
+                    {format.currency(o.total)}
                   </span>
                 </span>
               </div>
@@ -109,25 +112,29 @@ export function DashboardPreview() {
       </div>
 
       {/* Floating AI card */}
-      <div className="absolute -right-2 -bottom-6 hidden w-64 animate-float rounded-xl border border-glass-border glass p-3.5 shadow-[var(--shadow-lg)] sm:block lg:-right-6">
+      <div className="absolute -end-2 -bottom-6 hidden w-64 animate-float rounded-xl border border-glass-border glass p-3.5 shadow-[var(--shadow-lg)] sm:block lg:-end-6">
         <div className="flex items-center gap-2">
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[image:var(--gradient-brand)] text-white">
             <Sparkles className="h-3.5 w-3.5" />
           </span>
-          <p className="text-[12px] font-semibold">Assistant IA</p>
-          <ArrowUpRight className="ml-auto h-3.5 w-3.5 text-faint" />
+          <p className="text-[12px] font-semibold">{t("Assistant IA")}</p>
+          <ArrowUpRight className="ms-auto h-3.5 w-3.5 text-faint" />
         </div>
         <p className="mt-2 text-[11.5px] leading-relaxed text-muted-foreground">
-          Relancez les <span className="font-semibold text-foreground">312 paniers COD</span> abandonnés —
-          impact estimé <span className="font-semibold text-success">+142 000 DZD</span>.
+          {t("Relancez les")}{" "}
+          <span className="font-semibold text-foreground">{t("312 paniers COD")}</span>{" "}
+          {t("abandonnés — impact estimé")}{" "}
+          <span className="font-semibold text-success">{t("+142 000 DZD")}</span>.
         </p>
       </div>
 
       {/* Floating order card */}
-      <div className="absolute -bottom-5 left-2 hidden animate-float rounded-xl border border-glass-border glass p-3 shadow-[var(--shadow-lg)] md:block lg:left-6" style={{ animationDelay: "1.4s" }}>
-        <p className="text-[10.5px] text-faint">Nouvelle commande · {relativeTime(ORDERS[0].createdAt)}</p>
+      <div className="absolute -bottom-5 start-2 hidden animate-float rounded-xl border border-glass-border glass p-3 shadow-[var(--shadow-lg)] md:block lg:start-6" style={{ animationDelay: "1.4s" }}>
+        <p className="text-[10.5px] text-faint">
+          {t("Nouvelle commande · {time}", { time: format.relative(ORDERS[0].createdAt) })}
+        </p>
         <p className="mt-0.5 text-[12px] font-semibold">
-          {ORDERS[0].reference} · {formatCurrency(ORDERS[0].total)}
+          {ORDERS[0].reference} · {format.currency(ORDERS[0].total)}
         </p>
       </div>
     </div>

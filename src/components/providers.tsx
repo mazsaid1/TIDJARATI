@@ -7,8 +7,10 @@ import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 
 import { env } from "@/lib/env";
+import type { Locale } from "@/lib/i18n/config";
+import { I18nProvider } from "@/components/i18n/i18n-provider";
 
-function Shell({ children }: { children: ReactNode }) {
+function Shell({ locale, children }: { locale: Locale; children: ReactNode }) {
   return (
     <ThemeProvider
       attribute="class"
@@ -17,7 +19,7 @@ function Shell({ children }: { children: ReactNode }) {
       disableTransitionOnChange={false}
       storageKey="tidjarati-theme"
     >
-      {children}
+      <I18nProvider locale={locale}>{children}</I18nProvider>
     </ThemeProvider>
   );
 }
@@ -43,11 +45,14 @@ function WithClerkAndConvex({ children }: { children: ReactNode }) {
  * - No keys  → demo mode (local mock data, dark/light theme only).
  * - Clerk    → real sessions, RBAC, org/team support.
  * - Convex   → realtime typed backend.
+ *
+ * The active locale always comes from the `[locale]` route segment, so the
+ * server-rendered HTML already matches the visitor's language (no flash).
  */
-export function AppProviders({ children }: { children: ReactNode }) {
+export function AppProviders({ locale, children }: { locale: Locale; children: ReactNode }) {
   if (env.clerk.configured && env.convex.configured) {
     return (
-      <Shell>
+      <Shell locale={locale}>
         <WithClerkAndConvex>{children}</WithClerkAndConvex>
       </Shell>
     );
@@ -55,7 +60,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
 
   if (env.clerk.configured) {
     return (
-      <Shell>
+      <Shell locale={locale}>
         <ClerkProvider publishableKey={env.clerk.publishableKey}>{children}</ClerkProvider>
       </Shell>
     );
@@ -63,11 +68,11 @@ export function AppProviders({ children }: { children: ReactNode }) {
 
   if (env.convex.configured) {
     return (
-      <Shell>
+      <Shell locale={locale}>
         <WithConvex>{children}</WithConvex>
       </Shell>
     );
   }
 
-  return <Shell>{children}</Shell>;
+  return <Shell locale={locale}>{children}</Shell>;
 }

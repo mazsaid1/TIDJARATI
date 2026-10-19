@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/i18n-provider";
 import { Badge } from "@/components/ui/badge";
 
 type NavItem = {
@@ -76,6 +77,7 @@ export function Sidebar({
   onMobileClose: () => void;
 }) {
   const pathname = usePathname();
+  const { t, format } = useI18n();
 
   return (
     <>
@@ -90,9 +92,9 @@ export function Sidebar({
       />
 
       <aside
-        aria-label="Navigation principale"
+        aria-label={t("Navigation principale")}
         className={cn(
-          "fixed top-4 bottom-4 left-4 z-50 hidden flex-col rounded-2xl border border-glass-border glass shadow-[var(--shadow-lg)] transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] lg:flex",
+          "fixed top-4 bottom-4 start-4 z-50 hidden flex-col rounded-2xl border border-glass-border glass shadow-[var(--shadow-lg)] transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] lg:flex",
           collapsed ? "w-[76px]" : "w-[248px]",
         )}
       >
@@ -101,7 +103,7 @@ export function Sidebar({
           <Link
             href="/"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[image:var(--gradient-brand)] font-display text-[15px] font-bold text-white shadow-[0_8px_24px_-10px_rgba(124,58,237,0.9)]"
-            aria-label="TIDJARATI — accueil"
+            aria-label={t("TIDJARATI — accueil")}
           >
             H
           </Link>
@@ -114,9 +116,9 @@ export function Sidebar({
           <button
             type="button"
             onClick={onToggle}
-            aria-label={collapsed ? "Déplier la navigation" : "Replier la navigation"}
+            aria-label={collapsed ? t("Déplier la navigation") : t("Replier la navigation")}
             className={cn(
-              "ml-auto flex h-7 w-7 items-center justify-center rounded-lg text-faint transition-all hover:bg-sidebar-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none",
+              "ms-auto flex h-7 w-7 items-center justify-center rounded-lg text-faint transition-all hover:bg-sidebar-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none",
               collapsed && "mx-auto mt-2",
             )}
           >
@@ -130,7 +132,7 @@ export function Sidebar({
             <div key={group.section} className="mb-4">
               {!collapsed && (
                 <p className="mb-1.5 px-3 text-[10.5px] font-semibold tracking-[0.14em] text-faint uppercase">
-                  {group.section}
+                  {t(group.section)}
                 </p>
               )}
               <ul className="space-y-0.5">
@@ -141,7 +143,7 @@ export function Sidebar({
                       <Link
                         href={item.href}
                         aria-current={active ? "page" : undefined}
-                        title={collapsed ? item.label : undefined}
+                        title={collapsed ? t(item.label) : undefined}
                         onClick={onMobileClose}
                         className={cn(
                           "group/item relative flex items-center gap-3 rounded-xl px-3 py-2 text-[13.5px] font-medium transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring/40",
@@ -154,7 +156,7 @@ export function Sidebar({
                         {active && (
                           <span
                             aria-hidden
-                            className="absolute top-1/2 -left-[13px] h-5 w-[3px] -translate-y-1/2 rounded-full bg-[image:var(--gradient-brand)]"
+                            className="absolute top-1/2 start-[-13px] h-5 w-[3px] -translate-y-1/2 rounded-full bg-[image:var(--gradient-brand)]"
                           />
                         )}
                         <item.icon
@@ -166,18 +168,18 @@ export function Sidebar({
                         />
                         {!collapsed && (
                           <>
-                            <span className="truncate">{item.label}</span>
-                            <span className="ml-auto flex items-center gap-1.5">
+                            <span className="truncate">{t(item.label)}</span>
+                            <span className="ms-auto flex items-center gap-1.5">
                               {item.count ? (
                                 <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10.5px] font-bold text-white tabular-nums">
                                   {item.count}
                                 </span>
                               ) : null}
-                              {item.badge && (
+                              {item.badge ? (
                                 <Badge variant="primary" className="px-1.5 py-0 text-[10px]">
-                                  {item.badge}
+                                  {t(item.badge)}
                                 </Badge>
-                              )}
+                              ) : null}
                             </span>
                           </>
                         )}
@@ -202,23 +204,28 @@ export function Sidebar({
               <>
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-[12.5px] font-semibold">Plan Growth</p>
-                  <span className="text-[11px] text-muted-foreground tabular-nums">82 %</span>
+                  <span className="text-[11px] text-muted-foreground tabular-nums">
+                    {format.number(82)} %
+                  </span>
                 </div>
                 <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-background/40">
                   <div className="h-full w-[82%] rounded-full bg-[image:var(--gradient-brand)]" />
                 </div>
                 <p className="mt-2.5 text-[11.5px] leading-relaxed text-muted-foreground">
-                  1 284 / 10 000 commandes ce mois
+                  {t("{used} / {total} commandes ce mois", {
+                    used: format.number(1284),
+                    total: format.number(10000),
+                  })}
                 </p>
                 <Link
                   href="/dashboard/billing"
                   className="mt-3 inline-flex items-center gap-1 text-[12px] font-semibold text-primary hover:underline"
                 >
-                  Gérer l’abonnement <ChevronRight className="h-3 w-3" />
+                  {t("Gérer l’abonnement")} <ChevronRight className="rtl-flip h-3 w-3" />
                 </Link>
               </>
             ) : (
-              <Link href="/dashboard/billing" aria-label="Gérer l'abonnement">
+              <Link href="/dashboard/billing" aria-label={t("Gérer l'abonnement")}>
                 <Shield className="h-4 w-4 text-primary" />
               </Link>
             )}
@@ -229,8 +236,8 @@ export function Sidebar({
       {/* Mobile drawer */}
       <aside
         className={cn(
-          "fixed top-0 bottom-0 left-0 z-50 flex w-[272px] flex-col border-r border-glass-border bg-background-elevated transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden",
-          mobileOpen ? "translate-x-0" : "-translate-x-full",
+          "fixed top-0 bottom-0 start-0 z-50 flex w-[272px] flex-col border-e border-glass-border bg-background-elevated transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden",
+          mobileOpen ? "translate-x-0" : "-translate-x-full rtl:translate-x-full",
         )}
         aria-hidden={!mobileOpen}
       >
@@ -244,7 +251,7 @@ export function Sidebar({
           {NAV.map((group) => (
             <div key={group.section} className="mb-4">
               <p className="mb-1.5 px-3 text-[10.5px] font-semibold tracking-[0.14em] text-faint uppercase">
-                {group.section}
+                {t(group.section)}
               </p>
               <ul className="space-y-0.5">
                 {group.items.map((item) => {
@@ -266,9 +273,9 @@ export function Sidebar({
                           className={cn("h-[18px] w-[18px]", active ? "text-primary" : "text-faint")}
                           aria-hidden
                         />
-                        <span>{item.label}</span>
+                        <span>{t(item.label)}</span>
                         {item.count ? (
-                          <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10.5px] font-bold text-white tabular-nums">
+                          <span className="ms-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[10.5px] font-bold text-white tabular-nums">
                             {item.count}
                           </span>
                         ) : null}

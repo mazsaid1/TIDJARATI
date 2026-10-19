@@ -1,12 +1,22 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+import { DEFAULT_LOCALE, LOCALE_INTL, type Locale } from "@/lib/i18n/config";
+import { translate } from "@/lib/i18n/translate";
+
 /** Merge conditional class names with Tailwind conflict resolution. */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(value: number, currency = "DZD", locale = "fr-DZ") {
+/** The only currency TIDJARATI bills in — Algerian dinar. */
+export const CURRENCY = "DZD";
+
+export function formatCurrency(
+  value: number,
+  currency: string = CURRENCY,
+  locale: string = LOCALE_INTL[DEFAULT_LOCALE],
+) {
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
@@ -14,20 +24,28 @@ export function formatCurrency(value: number, currency = "DZD", locale = "fr-DZ"
   }).format(value);
 }
 
-export function formatNumber(value: number, locale = "fr-FR") {
+export function formatNumber(value: number, locale: string = LOCALE_INTL[DEFAULT_LOCALE]) {
   return new Intl.NumberFormat(locale).format(value);
 }
 
-export function formatCompact(value: number, locale = "fr-FR") {
+export function formatCompact(value: number, locale: string = LOCALE_INTL[DEFAULT_LOCALE]) {
   return new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 }).format(value);
 }
 
-export function formatPercent(value: number, locale = "fr-FR") {
+export function formatPercent(value: number, locale: string = LOCALE_INTL[DEFAULT_LOCALE]) {
   return new Intl.NumberFormat(locale, {
     style: "percent",
     maximumFractionDigits: 1,
     signDisplay: "exceptZero",
   }).format(value / 100);
+}
+
+export function formatDate(
+  iso: string,
+  locale: string = LOCALE_INTL[DEFAULT_LOCALE],
+  options: Intl.DateTimeFormatOptions = { day: "2-digit", month: "short" },
+) {
+  return new Date(iso).toLocaleDateString(locale, options);
 }
 
 /**
@@ -39,16 +57,16 @@ export function formatPercent(value: number, locale = "fr-FR") {
  */
 export const DEMO_NOW = new Date("2026-10-19T09:35:00.000Z");
 
-export function relativeTime(iso: string, now: Date = DEMO_NOW) {
+export function relativeTime(iso: string, now: Date = DEMO_NOW, locale: Locale = DEFAULT_LOCALE) {
   const diff = now.getTime() - new Date(iso).getTime();
   const minutes = Math.round(diff / 60000);
-  if (minutes < 1) return "à l'instant";
-  if (minutes < 60) return `il y a ${minutes} min`;
+  if (minutes < 1) return translate(locale, "à l’instant");
+  if (minutes < 60) return translate(locale, "il y a {n} min", { n: minutes });
   const hours = Math.round(minutes / 60);
-  if (hours < 24) return `il y a ${hours} h`;
+  if (hours < 24) return translate(locale, "il y a {n} h", { n: hours });
   const days = Math.round(hours / 24);
-  if (days < 30) return `il y a ${days} j`;
-  return new Date(iso).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" });
+  if (days < 30) return translate(locale, "il y a {n} j", { n: days });
+  return formatDate(iso, LOCALE_INTL[locale]);
 }
 
 export function initials(name: string) {

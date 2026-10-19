@@ -46,7 +46,46 @@ déterministe (`src/lib/mock/data.ts`).
 
 Palette de marque : primary `#7C3AED`, secondary `#A78BFA`, fond sombre `#0F172A`,
 surfaces `#111827`/`#1E293B`, succès `#10B981`, danger `#EF4444`, alerte `#F59E0B`.
-Typographies : **Inter** + **Plus Jakarta Sans**.
+Typographies : **Inter** + **Plus Jakarta Sans** + **Noto Sans Arabic** (arabe).
+
+---
+
+## 🌍 Internationalisation — FR / EN / AR (RTL natif)
+
+L'application est **réellement trilingue**, landing **et dashboard inclus** :
+
+| Langue | `lang` | Direction | Police |
+| ------ | ------ | --------- | ------ |
+| Français (défaut) | `fr-DZ` | LTR | Inter / Plus Jakarta Sans |
+| Anglais | `en-DZ` | LTR | Inter / Plus Jakarta Sans |
+| Arabe | `ar-DZ` | **RTL** | Noto Sans Arabic |
+
+**Architecture**
+
+- Routes localisées sous `src/app/[locale]/` (`generateStaticParams` → `/fr`, `/en`, `/ar`).
+- `src/proxy.ts` résout la locale dans cet ordre : **cookie `tidjarati-locale`** →
+  en-tête `Accept-Language` → `fr`, puis **réécrit** les URLs propres :
+  `/pricing` → `/fr/pricing`, `/dashboard/orders` → `/ar/dashboard/orders`, etc.
+  Les routes `/api/*` ne sont jamais réécrites.
+- Le français sert de **clé de traduction** (style gettext) : le dictionnaire `fr` est
+  vide et l'identité renvoie la chaîne source ; toute clé absente d'`en`/`ar`
+  retombe proprement sur le français.
+- Dictionnaires fragmentés dans `src/lib/i18n/dictionaries/{en,ar}/` :
+  `core`, `marketing`, `auth`, `shell`, `dashboard`, `dashboardB` — **parité stricte
+  665 clés** par locale, vérifiée par script.
+- Côté client : `useI18n()` / `useT()` + formatters (`format.currency`, `format.number`,
+  `format.date`, `format.relativeTime`) via `src/components/i18n/`.
+- Côté serveur : `getT(locale)` dans `src/lib/i18n/server.ts` (pages serveur, métadonnées).
+
+**RTL & Algérie**
+
+- `lang` / `dir` posés sur `<html>` ; utilitaires logiques (`ms-*`, `ps-*`, `border-s`,
+  `text-start`) et `.rtl-flip` pour les icônes directionnelles ; toggle et drawer
+  inversés en arabe.
+- Prix en **DZD** (`Intl.NumberFormat("…-DZ", { currency: "DZD" })`), 58 wilayas
+  (`src/lib/wilayas.ts`, noms FR/AR) et dates relatives localisées.
+- Sélecteur de langue dans la navigation (marketing, auth, dashboard) : écrit le
+  cookie `tidjarati-locale` puis `router.refresh()`.
 
 ---
 
@@ -65,6 +104,10 @@ Typographies : **Inter** + **Plus Jakarta Sans**.
 ---
 
 ## 🗺️ Routes
+
+Toutes les routes publiques existent dans les **3 locales** (`/fr/...`, `/en/...`,
+`/ar/...`) et sont accessibles **sans préfixe** grâce à la réécriture de `proxy.ts`
+(`/pricing` sert `/fr/pricing`, etc.).
 
 **Marketing** : `/` (hero « The Future of Commerce in Algeria », piliers, features,
 intégrations, pricing, témoignages, FAQ, CTA), `/pricing`, `/support`, `/privacy-policy`.

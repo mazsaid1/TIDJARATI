@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/i18n-provider";
 
 export function Modal({
   open,
@@ -24,6 +25,7 @@ export function Modal({
   size?: "sm" | "md" | "lg";
 }) {
   const id = useId();
+  const { t } = useI18n();
 
   useEffect(() => {
     if (!open) return;
@@ -70,7 +72,7 @@ export function Modal({
             <button
               type="button"
               onClick={onClose}
-              aria-label="Fermer"
+              aria-label={t("Fermer")}
               className="rounded-lg p-1.5 text-faint transition-colors hover:bg-sidebar-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none"
             >
               <X className="h-4 w-4" />

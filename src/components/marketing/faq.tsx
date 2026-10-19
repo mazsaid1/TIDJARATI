@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/i18n-provider";
 
 const FAQ = [
   {
@@ -37,6 +38,7 @@ const FAQ = [
 ];
 
 export function FAQSection() {
+  const { t } = useI18n();
   const [open, setOpen] = useState<number | null>(0);
 
   return (
@@ -49,9 +51,9 @@ export function FAQSection() {
               type="button"
               onClick={() => setOpen(isOpen ? null : i)}
               aria-expanded={isOpen}
-              className="flex w-full items-start justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-sidebar-hover focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none sm:px-6"
+              className="flex w-full items-start justify-between gap-4 px-5 py-4 text-start transition-colors hover:bg-sidebar-hover focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none sm:px-6"
             >
-              <span className="text-[14.5px] font-medium leading-snug">{item.q}</span>
+              <span className="text-[14.5px] font-medium leading-snug">{t(item.q)}</span>
               <span
                 className={cn(
                   "mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-border text-faint transition-all duration-300",
@@ -68,7 +70,7 @@ export function FAQSection() {
             >
               <div className="overflow-hidden">
                 <p className="px-5 pb-5 text-[13.5px] leading-relaxed text-muted-foreground sm:px-6">
-                  {item.a}
+                  {t(item.a)}
                 </p>
               </div>
             </div>

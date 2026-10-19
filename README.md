@@ -1,5 +1,8 @@
 # TIDJARATI — *The AI Commerce Operating System for Algeria*
 
+[![CI](https://github.com/mazsaid1/TIDJARATI/actions/workflows/ci.yml/badge.svg)](https://github.com/mazsaid1/TIDJARATI/actions/workflows/ci.yml)
+[![Deploy](https://github.com/mazsaid1/TIDJARATI/actions/workflows/deploy-vercel.yml/badge.svg)](https://github.com/mazsaid1/TIDJARATI/actions/workflows/deploy-vercel.yml)
+
 > Nom de package : `tidjarati` · Nom produit affiché : **TIDJARATI**
 
 SaaS e‑commerce multi‑tenant (Algérie) : landing marketing premium,
@@ -109,6 +112,25 @@ uniquement lorsque Clerk est configuré.
 > `npx convex dev` (avec `CONVEX_DEPLOYMENT`) puis `npx convex codegen`.
 > En attendant, `convex/` est exclu du `tsconfig` racine et possède son propre
 > `convex/tsconfig.json`.
+
+---
+
+## ⚙️ CI/CD (GitHub Actions)
+
+| Workflow | Déclencheur | Rôle |
+| -------- | ----------- | ---- |
+| `.github/workflows/ci.yml` | `push` / `pull_request` sur `main` | `npm ci` → `lint` → `tsc --noEmit` → `next build` |
+| `.github/workflows/deploy-vercel.yml` | `push` sur `main` | Déploiement production Vercel (dormant sans secrets) |
+
+Le workflow **Deploy** ne s'exécute réellement qu'une fois ces secrets ajoutés
+dans *Settings → Secrets and variables → Actions* :
+
+- `VERCEL_TOKEN` — jeton personnel (<https://vercel.com/account/tokens>)
+- `VERCEL_ORG_ID` et `VERCEL_PROJECT_ID` — visibles dans `.vercel/project.json`
+  après un `vercel link` local
+
+Aucune clé n'est nécessaire pour la **CI** : le mode démo construit sans variables
+d'environnement.
 
 ---
 

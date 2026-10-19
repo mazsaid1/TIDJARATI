@@ -1,0 +1,20 @@
+{
+  /* Convex functions are type-checked with their own config so the Next.js
+     build stays green before `npx convex dev` has generated _generated/*. */
+  "compilerOptions": {
+    "allowJs": true,
+    "strict": true,
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "target": "ESNext",
+    "lib": ["ES2021", "dom"],
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["./_generated"]
+}
